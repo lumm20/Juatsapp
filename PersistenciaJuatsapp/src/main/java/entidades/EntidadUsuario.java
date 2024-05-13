@@ -48,7 +48,9 @@ public class EntidadUsuario implements Serializable{
     }
 
     public String getIdString(){
-        return this.id.toHexString();
+        if(id!=null)
+            return this.id.toHexString();
+        return null;
     }
     
     public String getNombre() {
@@ -111,8 +113,18 @@ public class EntidadUsuario implements Serializable{
         sb.append(", telefono=").append(telefono);
         sb.append(", contrasena=").append(contrasena);
         sb.append(", direccion=").append(direccion);
-        sb.append(", fechaNacimiento=").append(fechaToString());
+        if(fechaNacimiento!=null)
+            sb.append(", fechaNacimiento=").append(fechaToString());
         sb.append(", sexo=").append(sexo);
+        sb.append('}');
+        return sb.toString();
+    }
+    
+    public String toStringCorto(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("EntidadUsuario{");
+        sb.append("nombre=").append(nombre);
+        sb.append(", telefono=").append(telefono);
         sb.append('}');
         return sb.toString();
     }
