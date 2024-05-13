@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import entidades.EntidadChat;
 import entidades.EntidadMensaje;
 import excepciones.PersistenciaException;
 import java.util.List;
@@ -18,5 +19,6 @@ public interface IMensajeDAO {
     EntidadMensaje eliminarMensaje(EntidadMensaje mensaje)throws PersistenciaException;
     EntidadMensaje buscarMensaje(EntidadMensaje mensaje)throws PersistenciaException;
     List<EntidadMensaje> buscarMensajes()throws PersistenciaException;
+    List<EntidadMensaje> buscarMensajes(EntidadChat chat)throws PersistenciaException;
     List<EntidadMensaje> buscarMensajesFiltrados(EntidadMensaje mensajeFiltrado)throws PersistenciaException;
 }

@@ -5,6 +5,7 @@
 package entidades;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -14,7 +15,7 @@ import org.bson.types.ObjectId;
  *
  * @author LuisaM
  */
-public class EntidadMensaje implements Serializable{
+    public class EntidadMensaje implements Serializable{
     private ObjectId id;
     private EntidadUsuario remitente;
     private EntidadChat chat;
@@ -25,11 +26,12 @@ public class EntidadMensaje implements Serializable{
     public EntidadMensaje() {
     }
 
-    public EntidadMensaje(EntidadUsuario remitente, EntidadChat chat, Calendar fechaHora, String texto, String nombreImagen) {
+    public EntidadMensaje(EntidadUsuario remitente, EntidadChat chat, Date fechaHora, String texto, String nombreImagen) {
         this.remitente = remitente;
         this.chat = chat;
-        fechaHora.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
-        this.fechaHora = fechaHora.getTime();
+        Calendar fecha=Calendar.getInstance(TimeZone.getTimeZone("America/Arizona"));
+        fecha.setTime(fechaHora);
+        this.fechaHora = fecha.getTime();
         this.texto = texto;
         this.nombreImagen = nombreImagen;
     }
@@ -62,9 +64,10 @@ public class EntidadMensaje implements Serializable{
         return fechaHora;
     }
 
-    public void setFechaHora(Calendar fechaHora) {
-        fechaHora.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
-        this.fechaHora = fechaHora.getTime();
+    public void setFechaHora(Date fechaHora) {
+        Calendar fecha=Calendar.getInstance(TimeZone.getTimeZone("America/Arizona"));
+        fecha.setTime(fechaHora);
+        this.fechaHora = fecha.getTime();
     }
 
     public String getTexto() {
@@ -81,5 +84,28 @@ public class EntidadMensaje implements Serializable{
 
     public void setNombreImagen(String nombreImagen) {
         this.nombreImagen = nombreImagen;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("EntidadMensaje{");
+        sb.append("id=").append(id);
+        sb.append(", remitente=").append(remitente.toStringCorto());
+        sb.append(", chat=").append(chat);
+        sb.append(", fechaHora=").append(fechaToString());
+        if(texto!=null)
+            sb.append(", texto=").append(texto);
+        if(nombreImagen!=null)
+            sb.append(", nombreImagen=").append(nombreImagen);
+        sb.append('}');
+        return sb.toString();
+    }
+    
+    
+    public String fechaToString() {
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd HH:MM");
+        formatoFecha.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
+        return formatoFecha.format(fechaHora);
     }
 }
