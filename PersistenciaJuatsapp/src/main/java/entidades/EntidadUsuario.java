@@ -4,11 +4,18 @@
  */
 package entidades;
 
+import entidades.EntidadChat.ComparadorChat;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import org.bson.types.ObjectId;
 
 /**
@@ -23,8 +30,10 @@ public class EntidadUsuario implements Serializable{
     private Direccion direccion;
     private Date fechaNacimiento;
     private SexoEnum sexo;
-
+    private Set<EntidadChat> chats;
+    
     public EntidadUsuario() {
+        chats=new TreeSet<>(new ComparadorChat());
     }
 
     public EntidadUsuario(String nombre, String telefono, String contrasena, Direccion direccion, Date fechaNacimiento, SexoEnum sexo) {
@@ -37,8 +46,21 @@ public class EntidadUsuario implements Serializable{
         fecha.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
         this.fechaNacimiento = fecha.getTime();
         this.sexo = sexo;
+        this.chats=new TreeSet<>(new ComparadorChat());
     }
 
+    public Set<EntidadChat> getChats() {
+        return chats;
+    }
+
+    public void setChats(Set<EntidadChat> chats) {
+        this.chats = chats;
+    }
+
+    public void agregarChat(EntidadChat chat){
+        this.chats.add(chat);
+    }
+    
     public ObjectId getId() {
         return id;
     }

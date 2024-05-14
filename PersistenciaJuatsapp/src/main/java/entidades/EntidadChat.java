@@ -6,8 +6,11 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import org.bson.types.ObjectId;
+import java.util.Date;
 
 /**
  *
@@ -19,9 +22,11 @@ public class EntidadChat implements Serializable{
     private EntidadUsuario contacto;
     private EntidadUsuario creador;
     private List<ObjectId> mensajes;
+    private Date ultimaActualizacion;
 
     public EntidadChat() {
         mensajes=new ArrayList<>();
+        ultimaActualizacion=new Date();
     }
 
     public EntidadChat(String rutaImagen, EntidadUsuario contacto, EntidadUsuario creador) {
@@ -29,6 +34,15 @@ public class EntidadChat implements Serializable{
         this.contacto = contacto;
         this.creador = creador;
         this.mensajes=new ArrayList<>();
+        ultimaActualizacion=new Date();
+    }
+
+    public Date getUltimaActualizacion() {
+        return ultimaActualizacion;
+    }
+
+    public void setUltimaActualizacion(Date ultimaActualizacion) {
+        this.ultimaActualizacion = ultimaActualizacion;
     }
 
     public List<ObjectId> getMensajes() {
@@ -108,5 +122,40 @@ public class EntidadChat implements Serializable{
         }
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 43 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    /**
+     * Compara el id de dos chats para evaluar si son iguales
+     * @param obj El objeto a comparar
+     * @return True si tienen el mismo id, false en caso contrario
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final EntidadChat other = (EntidadChat) obj;
+        return Objects.equals(this.id, other.id);
+    }
+    
+    public static class ComparadorChat implements Comparator<EntidadChat> {
+
+        @Override
+        public int compare(EntidadChat chat1, EntidadChat chat2) {
+            return chat2.getUltimaActualizacion().compareTo(chat1.getUltimaActualizacion());
+        }
     }
 }
