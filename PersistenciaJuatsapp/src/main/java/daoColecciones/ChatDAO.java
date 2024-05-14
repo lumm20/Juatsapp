@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -160,7 +161,13 @@ public class ChatDAO implements IChatDAO{
     @Override
     public List<EntidadChat> buscarChats(EntidadUsuario usuario) throws PersistenciaException {
         try {
-            Bson filtro=Filters.eq("creador.telefono", usuario.getTelefono());
+            ObjectId id=null;
+            Bson filtroId=Filters.eq("_id",id);
+            
+            Bson filtro=Filters.or(
+                    Filters.eq("creador.telefono", usuario.getTelefono()),
+                    Filters.eq("contacto.telefono", usuario.getTelefono())
+                    );
             List<EntidadChat> chats=new ArrayList<>();
             coleccion.find(filtro).into(chats);
             if(!chats.isEmpty())return chats;
