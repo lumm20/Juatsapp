@@ -17,6 +17,7 @@ import excepciones.PersistenciaException;
 import interfaces.IChatDAO;
 import interfaces.IMensajeDAO;
 import interfaces.IUsuarioDAO;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
  *
  * @author LuisaM
  */
-public class PersistenciaJuatsapp {
+public class PruebasPersistencia {
 
     public static void main(String[] args) {
         IUsuarioDAO dao=new UsuarioDAO();
@@ -87,7 +88,7 @@ public class PersistenciaJuatsapp {
         user2.setNombre("usuario 2");
         user2.setTelefono("6442110022");
         chat.setContacto(user2);
-        chat.setCreador(user1);
+        chat.setCreador(user1.getId());
         try {
             chat=cDao.buscarChat(chat);
             System.out.println("chat: "+chat);
@@ -95,18 +96,18 @@ public class PersistenciaJuatsapp {
             System.out.println(e);
         }
 //-------------------Agregar mensaje a chat------------- 
-//        EntidadMensaje mensaje=new EntidadMensaje();
-//        Calendar fecha=Calendar.getInstance();
-//        mensaje.setFechaHora(fecha.getTime());
-//        mensaje.setTexto("mensaje 1");
-//        mensaje.setRemitente(user2);
-//        try {
-//            chat=cDao.agregarMensaje(chat, mensaje);
-//            System.out.println("chat con mensaje: "+chat);
-//        } catch (PersistenciaException e) {
-//            System.out.println(e);
-//        }
-        //---------------buscar mensajes de un chat----------
+        EntidadMensaje mensaje=new EntidadMensaje();
+        LocalDateTime fecha=LocalDateTime.now();
+        mensaje.setFechaHora(fecha);
+        mensaje.setTexto("mensaje 1");
+        mensaje.setRemitente(user2);
+        try {
+            chat=cDao.agregarMensaje(chat, mensaje);
+            System.out.println("chat con mensaje: "+chat);
+        } catch (PersistenciaException e) {
+            System.out.println(e);
+        }
+//---------------buscar mensajes de un chat----------
         IMensajeDAO mDao=new MensajeDAO();
         try{
             List<EntidadMensaje> mensajes=mDao.buscarMensajes(chat);

@@ -67,12 +67,12 @@ public interface IMensajeDAO {
      * @return
      * @throws PersistenciaException 
      */
-    List<EntidadMensaje> buscarMensajesFiltrados(EntidadChat chat,EntidadMensaje mensajeFiltrado)throws PersistenciaException;
+    List<EntidadMensaje> buscarMensajesFiltrados(EntidadUsuario usuario,EntidadMensaje mensajeFiltrado)throws PersistenciaException;
     /**
      * 
      * @param mensajeFiltrado
      * @return
      * @throws PersistenciaException 
      */
-    List<EntidadMensaje> buscarMensajesFiltrados(EntidadMensaje mensajeFiltrado)throws PersistenciaException;
+    List<EntidadMensaje> buscarMensajesFiltrados(EntidadChat chat,EntidadMensaje mensajeFiltrado)throws PersistenciaException;
 }

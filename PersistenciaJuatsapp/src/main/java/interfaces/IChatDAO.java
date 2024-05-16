@@ -9,6 +9,7 @@ import entidades.EntidadMensaje;
 import entidades.EntidadUsuario;
 import excepciones.PersistenciaException;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -39,5 +40,5 @@ public interface IChatDAO {
      * @throws PersistenciaException En caso de que haya ocurrido un error en la base de datos
      * en el proceso de busqueda
      */
-    List<EntidadChat> buscarChats(EntidadUsuario usuario)throws PersistenciaException;
+    Set<EntidadChat> buscarChats(EntidadUsuario usuario)throws PersistenciaException;
 }

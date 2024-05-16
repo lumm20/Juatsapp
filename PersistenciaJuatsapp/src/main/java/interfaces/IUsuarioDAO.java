@@ -4,22 +4,27 @@
  */
 package interfaces;
 
+import entidades.EntidadChat;
 import entidades.EntidadUsuario;
 import excepciones.PersistenciaException;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
  * @author LuisaM
  */
 public interface IUsuarioDAO {
-    EntidadUsuario registrarUsuario(EntidadUsuario usuario)throws PersistenciaException;
-    EntidadUsuario actualizarNombre(EntidadUsuario usuario)throws PersistenciaException;
-    EntidadUsuario actualizarContrasena(EntidadUsuario usuario)throws PersistenciaException;
-    EntidadUsuario actualizarFechaNacimiento(EntidadUsuario usuario)throws PersistenciaException;
-    EntidadUsuario actualizarSexo(EntidadUsuario usuario)throws PersistenciaException;
-    EntidadUsuario actualizarDireccion(EntidadUsuario usuario)throws PersistenciaException;
-    EntidadUsuario actualizarTelefono(EntidadUsuario usuario)throws PersistenciaException;
+    boolean registrarUsuario(EntidadUsuario usuario)throws PersistenciaException;
+    EntidadUsuario iniciarSesion(EntidadUsuario usuario)throws PersistenciaException;
+    boolean actualizarNombre(EntidadUsuario usuario)throws PersistenciaException;
+    boolean actualizarContrasena(EntidadUsuario usuario, EntidadUsuario usuarioActualizado)throws PersistenciaException;
+    boolean actualizarFechaNacimiento(EntidadUsuario usuario)throws PersistenciaException;
+    boolean actualizarSexo(EntidadUsuario usuario)throws PersistenciaException;
+    boolean actualizarDireccion(EntidadUsuario usuario)throws PersistenciaException;
+    boolean actualizarTelefono(EntidadUsuario usuario)throws PersistenciaException;
+    boolean actualizarImagenPerfil(EntidadUsuario usuario)throws PersistenciaException;
     EntidadUsuario obtenerUsuario(EntidadUsuario usuario)throws PersistenciaException;
-    List<EntidadUsuario> obtenerUsuarios()throws PersistenciaException;
+    List<EntidadUsuario> obtenerUsuarios(EntidadUsuario usuario)throws PersistenciaException;
+    Set<EntidadChat> buscarChats(EntidadUsuario usuario)throws PersistenciaException; 
 }

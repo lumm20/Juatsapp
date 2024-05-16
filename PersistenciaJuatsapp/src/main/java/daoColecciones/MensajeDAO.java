@@ -10,6 +10,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 /**
@@ -38,6 +41,8 @@ public class MensajeDAO implements IMensajeDAO{
 
     public MensajeDAO() {
         this.coleccion = Conexion.getDatabase().getCollection("Mensajes", EntidadMensaje.class);
+        coleccion.createIndex(Indexes.ascending("chat._id"),new IndexOptions().name("chatIndex"));
+        coleccion.createIndex(Indexes.ascending("texto"),new IndexOptions().name("textoIndex"));
     }
     
     @Override
@@ -94,6 +99,7 @@ public class MensajeDAO implements IMensajeDAO{
         }
     }
 
+    //creo que no ocupo este metodo
     @Override
     public List<EntidadMensaje> buscarMensajes(EntidadUsuario usuario) throws PersistenciaException {
         try {
@@ -111,9 +117,12 @@ public class MensajeDAO implements IMensajeDAO{
     public List<EntidadMensaje> buscarMensajes(EntidadChat chat) throws PersistenciaException {
         try {
             List<EntidadMensaje> mensajes=new ArrayList<>();
-            chat.getMensajes().forEach(i->{
-                mensajes.add(coleccion.find(Filters.eq("_id", i)).first());
-            });
+            //otra manera de hacer la busqueda:
+//            chat.getMensajes().forEach(i->{
+//                mensajes.add(coleccion.find(Filters.eq("_id", i)).first());
+//            });
+            //si lo hago de esta manera ya no necesito la lista de mensajes en la entidadChat
+            coleccion.find(Filters.eq("chat._id", chat.getId())).into(mensajes);
             return mensajes;
         } catch (MongoException e){
             LOG.log(Level.SEVERE, e.getMessage(), e);
@@ -122,18 +131,16 @@ public class MensajeDAO implements IMensajeDAO{
     }
 
     @Override
-    public List<EntidadMensaje> buscarMensajesFiltrados(EntidadChat chat,EntidadMensaje mensajeFiltrado) throws PersistenciaException {
+    public List<EntidadMensaje> buscarMensajesFiltrados(EntidadUsuario usuario,EntidadMensaje mensajeFiltrado) throws PersistenciaException {
         try {
             List<Bson> pipeline=new ArrayList<>();
             Pattern pattern=Pattern.compile(mensajeFiltrado.getTexto(), Pattern.CASE_INSENSITIVE);
+            pipeline.add(Aggregates.match(Filters.in("chat", usuario.getChats())));
             pipeline.add(Aggregates.match(Filters.regex("texto", pattern)));
-            pipeline.add(Aggregates.lookup("Chats", "_id", "mensajes._id", "chatJoin"));
-            pipeline.add(Aggregates.unwind("$chatJoin"));
-            pipeline.add(Aggregates.project( Projections.fields(
-                    Projections.include("texto","fechaHora","remitente.nombre"),
-                    Projections.computed("chat", "$chatJoin.contacto")
-            )
-            ));
+            //pipeline.add(Aggregates.lookup("Chats", "chat._id", "_id", "chatJoin"));
+            //pipeline.add(Aggregates.unwind("$chatJoin"));
+            pipeline.add(Aggregates.project(Projections.include("texto","fechaHora",
+                    "remitente.nombre","chat.contacto")));
             AggregateIterable<EntidadMensaje> aggregate=coleccion.aggregate(pipeline);
             if(aggregate.first()!=null){
                 List<EntidadMensaje> mensajes=new ArrayList<>();
@@ -147,10 +154,13 @@ public class MensajeDAO implements IMensajeDAO{
     }
     
     @Override
-    public List<EntidadMensaje> buscarMensajesFiltrados(EntidadMensaje mensajeFiltrado) throws PersistenciaException {
+    public List<EntidadMensaje> buscarMensajesFiltrados(EntidadChat chat,EntidadMensaje mensajeFiltrado) throws PersistenciaException {
         try {
             List<EntidadMensaje> todosLosMensajes=new ArrayList<>();
-            return coleccion.find(Filters.eq("texto", mensajeFiltrado.getTexto())).into(todosLosMensajes);
+            return coleccion.find(Filters.and(
+                    Filters.eq("chat._id", chat.getId()),
+                    Filters.eq("texto", mensajeFiltrado.getTexto())))
+                    .into(todosLosMensajes);
         } catch (MongoException e){
             LOG.log(Level.SEVERE, e.getMessage(), e);
             throw new PersistenciaException("Hubo un error al buscar los mensajes");

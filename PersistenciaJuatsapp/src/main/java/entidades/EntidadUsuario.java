@@ -7,12 +7,8 @@ package entidades;
 import entidades.EntidadChat.ComparadorChat;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
@@ -26,9 +22,10 @@ public class EntidadUsuario implements Serializable{
     private ObjectId id;
     private String nombre;
     private String telefono;
-    private String contrasena;  
+    private String contrasena;
+    private String nombreImagenPerfil;
     private Direccion direccion;
-    private Date fechaNacimiento;
+    private LocalDateTime fechaNacimiento;
     private SexoEnum sexo;
     private Set<EntidadChat> chats;
     
@@ -36,17 +33,29 @@ public class EntidadUsuario implements Serializable{
         chats=new TreeSet<>(new ComparadorChat());
     }
 
-    public EntidadUsuario(String nombre, String telefono, String contrasena, Direccion direccion, Date fechaNacimiento, SexoEnum sexo) {
+    public EntidadUsuario(String telefono, String contrasena) {
+        this.telefono = telefono;
+        this.contrasena = contrasena;
+    }
+
+    public EntidadUsuario(String nombre, String telefono, String contrasena,String nombreImagenPerfil,
+            Direccion direccion, LocalDateTime fechaNacimiento, SexoEnum sexo) {
         this.nombre = nombre;
         this.telefono = telefono;
         this.contrasena = contrasena;
+        this.nombreImagenPerfil = nombreImagenPerfil;
         this.direccion = direccion;
-        Calendar fecha=Calendar.getInstance();
-        fecha.setTime(fechaNacimiento);
-        fecha.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
-        this.fechaNacimiento = fecha.getTime();
+        this.fechaNacimiento = fechaNacimiento;
         this.sexo = sexo;
         this.chats=new TreeSet<>(new ComparadorChat());
+    }
+
+    public String getNombreImagenPerfil() {
+        return nombreImagenPerfil;
+    }
+
+    public void setNombreImagenPerfil(String nombreImagenPerfil) {
+        this.nombreImagenPerfil = nombreImagenPerfil;
     }
 
     public Set<EntidadChat> getChats() {
@@ -107,15 +116,12 @@ public class EntidadUsuario implements Serializable{
         this.direccion = direccion;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDateTime getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        Calendar fecha=Calendar.getInstance();
-        fecha.setTime(fechaNacimiento);
-        fecha.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
-        this.fechaNacimiento = fecha.getTime();
+    public void setFechaNacimiento(LocalDateTime fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public SexoEnum getSexo() {
@@ -126,6 +132,13 @@ public class EntidadUsuario implements Serializable{
         this.sexo = sexo;
     }
 
+    public void actualizarFechaUltimaActualizacion(EntidadChat chat, LocalDateTime nuevaFecha) {
+        if (chats.remove(chat)) {
+            chat.setUltimaActualizacion(nuevaFecha); 
+            chats.add(chat);
+        }
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -134,9 +147,11 @@ public class EntidadUsuario implements Serializable{
         sb.append(", nombre=").append(nombre);
         sb.append(", telefono=").append(telefono);
         sb.append(", contrasena=").append(contrasena);
+        if(nombreImagenPerfil!=null)
+            sb.append(", imagen=").append(nombreImagenPerfil);
         sb.append(", direccion=").append(direccion);
         if(fechaNacimiento!=null)
-            sb.append(", fechaNacimiento=").append(fechaToString());
+            sb.append(", fechaNacimiento=").append(fechaNacimiento);
         sb.append(", sexo=").append(sexo);
         sb.append('}');
         return sb.toString();
@@ -144,7 +159,7 @@ public class EntidadUsuario implements Serializable{
     
     public String toStringCorto(){
         StringBuilder sb = new StringBuilder();
-        sb.append("EntidadUsuario{");
+        sb.append('{');
         sb.append("nombre=").append(nombre);
         sb.append(", telefono=").append(telefono);
         sb.append('}');
@@ -153,7 +168,7 @@ public class EntidadUsuario implements Serializable{
     
     public String fechaToString() {
         SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd HH:MM");
-        formatoFecha.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
+        //formatoFecha.setTimeZone(TimeZone.getTimeZone("America/Arizona"));
         return formatoFecha.format(fechaNacimiento);
     }
 }
