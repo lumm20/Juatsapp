@@ -5,10 +5,14 @@
 package pantallas;
 
 import DTOs.UsuarioDTO;
+import excepciones.NegocioException;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.TimeZone;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
+import javax.swing.JTextField;
 /**
  *
  * @author LuisaM
@@ -222,7 +226,7 @@ public class SignInPanel extends javax.swing.JPanel {
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
         // TODO add your handling code here:
-        cancelar();
+        volver();
     }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void nameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameFieldActionPerformed
@@ -245,25 +249,57 @@ public class SignInPanel extends javax.swing.JPanel {
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
         // TODO add your handling code here:
-        Parent.fachadaUsuarios.registrarUsuario(usuario);
+        //Parent.fachadaUsuarios.registrarUsuario(usuario);
+        JOptionPane.showMessageDialog(null, guardarUsuario());
+        volver();
     }//GEN-LAST:event_saveBtnActionPerformed
     
     private void iniciar(){
         iconBtn.setIcon(defaultLight);
         iconBtn.setContentAreaFilled(false);
+        setCalendar();
     }
     
-    private void verificarCamposVacios(){
-        if(nameField.getText().isBlank()||phoneField.getText().isBlank()
-                ||passField.getText().isBlank()||dateChooser.getCalendar()==null
-                ||(!manBtn.isSelected() && !womanBtn.isSelected() && !otherBtn.isSelected())){
-            JOptionPane.showMessageDialog(null, "No puede dejar campos vacios");
-        }else{
-            usuario=new UsuarioDTO();
-            usuario.setNombre(nameField.getText());
-            usuario.setTelefono(phoneField.getText());
-            usuario.setContrasena(TOOL_TIP_TEXT_KEY);
+    private void setCalendar(){
+        dateChooser.getDateEditor().setEnabled(false);
+        Calendar maxDate=Calendar.getInstance(TimeZone.getTimeZone("America/Arizona"));
+        maxDate.set(2011, Calendar.DECEMBER, 31, 0, 0, 0);
+        dateChooser.setMaxSelectableDate(maxDate.getTime());
+        dateChooser.getJCalendar().getYearChooser().setEndYear(2011);
+    }
+    
+    private String guardarUsuario(){
+        setInfoUsuario();
+        String msj;
+        try {
+            if(Parent.fachadaUsuarios.registrarUsuario(usuario))
+                msj="Usuario registrado";
+            else 
+                msj="No se registro el usuario";
+        } catch (NegocioException e) {
+            msj=e.getMessage();
         }
+        return msj;
+    }
+    
+    private void setInfoUsuario() {
+        usuario = new UsuarioDTO();
+        usuario.setNombre(nameField.getText());
+        usuario.setTelefono(phoneField.getText());
+        usuario.setContrasena(passField.getText());
+        usuario.setDireccion(streetField.getText() + ";" + nbhField.getText() + ";" + numField.getText());
+        Calendar fecha=dateChooser.getCalendar();
+        LocalDateTime dateTime=null;
+        if (fecha != null) {
+            dateTime=LocalDateTime.of(fecha.get(Calendar.YEAR), fecha.get(Calendar.MONTH),
+                    fecha.get(Calendar.DAY_OF_MONTH), fecha.get(Calendar.HOUR_OF_DAY), fecha.get(Calendar.MINUTE), fecha.get(Calendar.SECOND));
+        }
+        usuario.setFechaNacimiento(dateTime);
+        String sexo="";
+        if(manBtn.isSelected()) sexo="hombre";
+        else if(womanBtn.isSelected())sexo="mujer";
+        else if(otherBtn.isSelected())sexo="otro";
+        usuario.setSexo(sexo);
     }
     
     private void limpiarCampos(){
@@ -276,7 +312,7 @@ public class SignInPanel extends javax.swing.JPanel {
         numField.setText("");
         btnGroup.clearSelection();
     }
-    private void cancelar(){
+    private void volver(){
         limpiarCampos();
         ((Parent) SwingUtilities.getWindowAncestor(this)).mostrarVentana("login");
     }

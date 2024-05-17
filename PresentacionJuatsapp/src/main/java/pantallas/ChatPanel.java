@@ -13,6 +13,8 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -184,9 +186,8 @@ public class ChatPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(msgBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(msgBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(msgField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(photoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(msgField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(photoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
 
@@ -204,6 +205,7 @@ public class ChatPanel extends javax.swing.JPanel {
 
     private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
         // TODO add your handling code here:
+        enviarMensaje();
     }//GEN-LAST:event_sendBtnActionPerformed
 
     private void msgFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_msgFieldFocusLost
@@ -229,6 +231,33 @@ public class ChatPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_bttnEmisorActionPerformed
 
+    private void cambiarColorTxtMsj(){
+        msgField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validar(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validar(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                validar(e);
+            }
+
+            private void validar(DocumentEvent e) {
+                if (e.getDocument().getLength() == 0) {
+                    msgField.setForeground(Color.LIGHT_GRAY);
+                } else {
+                    msgField.setForeground(Color.BLACK);
+                }
+
+            }
+        });
+    }
     private void iniciar(){
         setIcono(backBtn,"back.png");
         setIcono(sendBtn, "send-message.png");
@@ -236,6 +265,7 @@ public class ChatPanel extends javax.swing.JPanel {
         msgField.setText("Escribe un mensaje");
         msgField.setForeground(Color.LIGHT_GRAY);
         bttnEmisor.setSelected(true);
+        cambiarColorTxtMsj();
     }
     
     private void enviarMensaje() {
@@ -247,6 +277,7 @@ public class ChatPanel extends javax.swing.JPanel {
         StyleConstants.setAlignment(atributos, emisor ? StyleConstants.ALIGN_RIGHT : StyleConstants.ALIGN_LEFT);
 
         try {
+            
             doc.insertString(doc.getLength(), msj + "\n", atributos);
         } catch (BadLocationException e) {
             e.printStackTrace();

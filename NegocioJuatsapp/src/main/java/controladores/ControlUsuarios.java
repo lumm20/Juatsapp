@@ -31,12 +31,16 @@ public class ControlUsuarios {
     public boolean registrarUsuario(UsuarioDTO usuario)throws NegocioException{
         try {
             //si ya hay un usuario con ese telefono registrado
-            if(obtenerUsuario(usuario)!=null)return false;
+            if(obtenerUsuario(usuario)!=null)throw new NegocioException("Ya hay un usuario registrado con ese telefono");
             //si no, se registra
-            if(Validador.validar(Validador.NOMBRE, usuario.getNombre())){
-                return dao.registrarUsuario(Convertidor.crearEntidadUsuario(usuario));
-            }
-            return false;
+            int validadorCampo=Validador.cumpleConCampos(usuario);
+            if(validadorCampo==0){
+                int validadorFormato=Validador.cumpleConFormato(usuario);
+                if(validadorFormato==0){
+                        return dao.registrarUsuario(Convertidor.crearEntidadUsuario(usuario));
+                }
+                else throw new NegocioException("formato invalido en el campo: "+validadorFormato);
+            }else throw new NegocioException("no se ingreso informacion en el campo: "+validadorCampo);
         } catch (PersistenciaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -44,6 +48,7 @@ public class ControlUsuarios {
     
     public UsuarioDTO iniciarSesion(UsuarioDTO usuario)throws NegocioException{
         try {
+            if (!Validador.cumpleConFormato(Validador.TELEFONO, usuario.getTelefono())) throw new NegocioException("Ingreso un numero de telefono invalido");
             EntidadUsuario u=new EntidadUsuario(usuario.getTelefono(), usuario.getContrasena());
             u=dao.iniciarSesion(u);
             if(u!=null){
@@ -59,6 +64,7 @@ public class ControlUsuarios {
     
     public UsuarioDTO obtenerUsuario(UsuarioDTO usuario)throws NegocioException{
         try {
+            if (!Validador.cumpleConFormato(Validador.TELEFONO, usuario.getTelefono())) throw new NegocioException("Ingreso un numero de telefono invalido");
             EntidadUsuario u=new EntidadUsuario();
             u.setTelefono(usuario.getTelefono());
             u=dao.obtenerUsuario(u);
@@ -72,6 +78,7 @@ public class ControlUsuarios {
     
     public List<UsuarioDTO> obtenerUsuarios(UsuarioDTO usuario)throws NegocioException{
         try {
+            if (!Validador.cumpleConFormato(Validador.TELEFONO, usuario.getTelefono())) throw new NegocioException("Ingreso un numero de telefono invalido");
             EntidadUsuario u=new EntidadUsuario();
             u.setTelefono(usuario.getTelefono());
             List<EntidadUsuario> usuarios=dao.obtenerUsuarios(u);
@@ -85,6 +92,7 @@ public class ControlUsuarios {
     
     public boolean editarNombreUsuario(UsuarioDTO usuarioOriginal)throws NegocioException{
         try {
+            if (!Validador.cumpleConFormato(Validador.NOMBRE, usuarioOriginal.getNombre())) throw new NegocioException("Ingreso un nombre invalido");
             EntidadUsuario u=new EntidadUsuario();
             u.setId(this.idUsuario);
             u.setNombre(usuarioOriginal.getNombre());
@@ -109,6 +117,16 @@ public class ControlUsuarios {
     
     public boolean editarDireccionUsuario(UsuarioDTO usuarioOriginal)throws NegocioException{
         try {
+            int validadorDireccion=Validador.esDireccionValida(usuarioOriginal.getDireccion());
+            if (validadorDireccion>0){
+                String msj="";
+                switch(validadorDireccion){
+                    case 5-> msj="Ingreso un valor invalido para el campo 'calle'.";
+                    case 6-> msj="Ingreso un valor invalido para el campo 'colonia'.";
+                    case 7-> msj="Ingreso un valor invalido para el campo 'numero'.";
+                }
+                throw new NegocioException(msj);
+            }
             EntidadUsuario u=new EntidadUsuario();
             u.setId(this.idUsuario);
             String[] dirStr=usuarioOriginal.getDireccion().split(";");
@@ -122,6 +140,7 @@ public class ControlUsuarios {
     
     public boolean editarTelefonoUsuario(UsuarioDTO usuarioOriginal)throws NegocioException{
         try {
+            if (!Validador.cumpleConFormato(Validador.TELEFONO, usuarioOriginal.getTelefono())) throw new NegocioException("Ingreso un numero de telefono invalido");
             EntidadUsuario u=new EntidadUsuario();
             u.setId(this.idUsuario);
             u.setTelefono(usuarioOriginal.getTelefono());
@@ -150,6 +169,7 @@ public class ControlUsuarios {
     
     public boolean editarFechaNacimientoUsuario(UsuarioDTO usuarioOriginal)throws NegocioException{
         try {
+            if(usuarioOriginal.getFechaNacimiento()==null)throw new NegocioException("Debe ingresar una fecha");
             EntidadUsuario u=new EntidadUsuario();
             u.setId(this.idUsuario);
             u.setFechaNacimiento(usuarioOriginal.getFechaNacimiento());
