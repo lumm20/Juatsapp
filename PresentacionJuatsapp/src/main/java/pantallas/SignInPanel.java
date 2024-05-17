@@ -4,7 +4,9 @@
  */
 package pantallas;
 
+import DTOs.UsuarioDTO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -13,6 +15,7 @@ import javax.swing.SwingUtilities;
  */
 public class SignInPanel extends javax.swing.JPanel {
 
+    private UsuarioDTO usuario; 
     private final ImageIcon defaultLight=new ImageIcon("src/main/java/imagenes/default.png");
     private final ImageIcon defaultDark=new ImageIcon("src/main/java/imagenes/default_dark.png");
     /**
@@ -209,6 +212,11 @@ public class SignInPanel extends javax.swing.JPanel {
         saveBtn.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         saveBtn.setForeground(new java.awt.Color(0, 0, 0));
         saveBtn.setText("guardar");
+        saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBtnActionPerformed(evt);
+            }
+        });
         add(saveBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 610, 120, 40));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -234,6 +242,11 @@ public class SignInPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         iconBtn.setIcon(defaultLight);
     }//GEN-LAST:event_iconBtnMouseReleased
+
+    private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        // TODO add your handling code here:
+        Parent.fachadaUsuarios.registrarUsuario(usuario);
+    }//GEN-LAST:event_saveBtnActionPerformed
     
     private void iniciar(){
         iconBtn.setIcon(defaultLight);
@@ -244,7 +257,12 @@ public class SignInPanel extends javax.swing.JPanel {
         if(nameField.getText().isBlank()||phoneField.getText().isBlank()
                 ||passField.getText().isBlank()||dateChooser.getCalendar()==null
                 ||(!manBtn.isSelected() && !womanBtn.isSelected() && !otherBtn.isSelected())){
-            
+            JOptionPane.showMessageDialog(null, "No puede dejar campos vacios");
+        }else{
+            usuario=new UsuarioDTO();
+            usuario.setNombre(nameField.getText());
+            usuario.setTelefono(phoneField.getText());
+            usuario.setContrasena(TOOL_TIP_TEXT_KEY);
         }
     }
     
