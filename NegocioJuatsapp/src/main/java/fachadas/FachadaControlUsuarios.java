@@ -26,4 +26,13 @@ public class FachadaControlUsuarios {
             throw e;
         }
     }
+    
+    public boolean registrarUsuario(UsuarioDTO usuario)throws NegocioException{
+        try {
+            return control.registrarUsuario(usuario);
+        } catch (NegocioException e) {
+            throw e;
+        }
+    }
+    
 }

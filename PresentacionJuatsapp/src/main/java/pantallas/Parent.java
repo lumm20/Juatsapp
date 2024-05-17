@@ -4,6 +4,7 @@
  */
 package pantallas;
 
+import DTOs.ChatDTO;
 import DTOs.UsuarioDTO;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -37,6 +38,7 @@ public class Parent extends JFrame {
         cardPanel.add(new LoginPanel(), "login");
         cardPanel.add(new StartPanel(), "start");
         cardPanel.add(new SignInPanel(), "signIn");
+        cardPanel.add(new ChatPanel(), "chat");
         getContentPane().add(cardPanel, BorderLayout.CENTER);
     }
     

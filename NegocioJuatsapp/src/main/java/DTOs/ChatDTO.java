@@ -5,6 +5,8 @@
 package DTOs;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -18,6 +20,10 @@ public class ChatDTO {
     private Queue<MensajeDTO> mensajes;
     private LocalDateTime ultimaActualizacion;
 
+    public ChatDTO(){
+        this.mensajes=new LinkedList<>();
+    }
+    
     public String getNombreContacto() {
         return nombreContacto;
     }
@@ -50,6 +56,10 @@ public class ChatDTO {
         this.mensajes = mensajes;
     }
 
+    public void agregarMensaje(MensajeDTO mensaje){
+        this.mensajes.add(mensaje);
+    }
+    
     public LocalDateTime getUltimaActualizacion() {
         return ultimaActualizacion;
     }

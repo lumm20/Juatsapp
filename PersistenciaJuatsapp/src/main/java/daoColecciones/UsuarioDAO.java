@@ -50,7 +50,7 @@ public class UsuarioDAO implements IUsuarioDAO{
     public boolean registrarUsuario(EntidadUsuario usuario) throws PersistenciaException {
         try {
             usuario.setContrasena(crypt.genrarHash(usuario.getContrasena()));
-            InsertOneResult result = coleccion.insertOne(usuario);
+            InsertOneResult result = coleccion.insertOne(usuario);  
             return result.getInsertedId() != null;
         } catch (MongoException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);

@@ -241,10 +241,11 @@ public class SignInPanel extends javax.swing.JPanel {
     }
     
     private void verificarCamposVacios(){
-        saveBtn.setEnabled(nameField.getText().isBlank()||phoneField.getText().isBlank()
+        if(nameField.getText().isBlank()||phoneField.getText().isBlank()
                 ||passField.getText().isBlank()||dateChooser.getCalendar()==null
-                ||(!manBtn.isSelected() && !womanBtn.isSelected() && !otherBtn.isSelected()));
-            saveBtn.setEnabled(false);
+                ||(!manBtn.isSelected() && !womanBtn.isSelected() && !otherBtn.isSelected())){
+            
+        }
     }
     
     private void limpiarCampos(){

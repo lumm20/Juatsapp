@@ -4,19 +4,30 @@
  */
 package pantallas;
 
+import DTOs.ChatDTO;
+import DTOs.MensajeDTO;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import utilidades.CellRenderer;
 
 /**
  *
  * @author LuisaM
  */
 public class StartPanel extends javax.swing.JPanel {
-
+    private DefaultListModel<ChatDTO> modeloLista;
+    protected static ChatDTO chat;
     /**
      * Creates new form PanelInicio
      */
     public StartPanel() {
         initComponents();
+        iniciar();
     }
 
     /**
@@ -28,39 +39,225 @@ public class StartPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        logoutBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        iconBtn = new javax.swing.JButton();
+        searchBtn = new javax.swing.JButton();
+        add = new javax.swing.JButton();
+        selectBtn = new javax.swing.JButton();
+        newChatBtn = new javax.swing.JButton();
+        scroll = new javax.swing.JScrollPane();
+        chats = new javax.swing.JList<>();
 
+        setBackground(new java.awt.Color(86, 209, 246));
         setMaximumSize(new java.awt.Dimension(393, 700));
         setMinimumSize(new java.awt.Dimension(393, 700));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 51, 204));
-        jLabel1.setText("Logged in");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(63, 148, 256, 99));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jButton1.setText("cerrar sesion");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        logoutBtn.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        logoutBtn.setBorderPainted(false);
+        logoutBtn.setMaximumSize(new java.awt.Dimension(32, 32));
+        logoutBtn.setMinimumSize(new java.awt.Dimension(32, 32));
+        logoutBtn.setPreferredSize(new java.awt.Dimension(32, 32));
+        logoutBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                logoutBtnActionPerformed(evt);
             }
         });
-        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 332, 199, 107));
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Juatsapp");
+
+        iconBtn.setBorderPainted(false);
+        iconBtn.setMaximumSize(new java.awt.Dimension(64, 64));
+        iconBtn.setMinimumSize(new java.awt.Dimension(64, 64));
+        iconBtn.setPreferredSize(new java.awt.Dimension(64, 64));
+        iconBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                iconBtnActionPerformed(evt);
+            }
+        });
+
+        searchBtn.setMaximumSize(new java.awt.Dimension(32, 32));
+        searchBtn.setMinimumSize(new java.awt.Dimension(32, 32));
+        searchBtn.setPreferredSize(new java.awt.Dimension(32, 32));
+        searchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBtnActionPerformed(evt);
+            }
+        });
+
+        add.setMaximumSize(new java.awt.Dimension(32, 32));
+        add.setMinimumSize(new java.awt.Dimension(32, 32));
+        add.setPreferredSize(new java.awt.Dimension(32, 32));
+
+        selectBtn.setMaximumSize(new java.awt.Dimension(32, 32));
+        selectBtn.setMinimumSize(new java.awt.Dimension(32, 32));
+        selectBtn.setPreferredSize(new java.awt.Dimension(32, 32));
+
+        newChatBtn.setMaximumSize(new java.awt.Dimension(32, 32));
+        newChatBtn.setMinimumSize(new java.awt.Dimension(32, 32));
+        newChatBtn.setPreferredSize(new java.awt.Dimension(32, 32));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(31, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(51, 51, 51))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(newChatBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(selectBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(iconBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(18, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(newChatBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(selectBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(iconBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))))
+        );
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 150));
+
+        scroll.setViewportView(chats);
+
+        add(scroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 400, 530));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
         logout();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_logoutBtnActionPerformed
 
+    private void iconBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iconBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_iconBtnActionPerformed
+
+    private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchBtnActionPerformed
+
+    private void iniciar(){
+        setIconos();
+        cargarListaChats();
+        getChatSeleccionado();
+    }
+    private void setIconos(){
+        logoutBtn.setIcon(new ImageIcon("src/main/java/imagenes/logout_32.png"));
+        logoutBtn.setContentAreaFilled(false);
+        logoutBtn.setBorder(null);
+        iconBtn.setIcon(new ImageIcon("imagenes/userInicio.png"));
+        iconBtn.setContentAreaFilled(false);
+        iconBtn.setBorder(null);
+        searchBtn.setIcon(new ImageIcon("imagenes/search.png"));
+        searchBtn.setContentAreaFilled(false);
+        searchBtn.setBorder(null);
+        selectBtn.setIcon(new ImageIcon("imagenes/select.png"));
+        selectBtn.setContentAreaFilled(false);
+        selectBtn.setBorder(null);
+        newChatBtn.setIcon(new ImageIcon("imagenes/new-message.png"));
+        newChatBtn.setContentAreaFilled(false);
+        newChatBtn.setBorder(null);
+    }
+    
+    private void cargarListaChats(){
+        modeloLista = new DefaultListModel<>();
+        //listaChats = new JList<>(modeloLista);
+        chats=new JList<>(modeloLista);
+        ChatDTO chat1=new ChatDTO();
+        chat1.setNombreContacto("Luisa");
+        MensajeDTO mensaje=new MensajeDTO();
+        mensaje.setTexto("holaaa");
+        chat1.agregarMensaje(mensaje);
+        ChatDTO chat2=new ChatDTO();
+        chat2.setNombreContacto("Mariana");
+        MensajeDTO mensaje2=new MensajeDTO();
+        mensaje2.setTexto("jajajaj");
+        chat2.agregarMensaje(mensaje2);
+        ChatDTO chat3=new ChatDTO();
+        chat3.setNombreContacto("Sofia");
+        MensajeDTO mensaje3=new MensajeDTO();
+        mensaje3.setTexto("no se");
+        chat3.agregarMensaje(mensaje3);
+        // Agregar algunos elementos de muestra a la lista de chats
+        modeloLista.addElement(chat1);
+        modeloLista.addElement(chat2);
+        modeloLista.addElement(chat3);
+
+        // Personalizar el renderizado de los elementos de la lista
+        chats.setCellRenderer(new CellRenderer());
+        //scroll=new JScrollPane(chats);
+        scroll.setViewportView(chats);
+    }
+    
+    private void getChatSeleccionado(){
+        chats.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    chat=chats.getSelectedValue();
+                    System.out.println("chat seleccionado: "+chat);
+                    if(chat!=null){
+                        ChatPanel.chatSeleccionado=chat;
+                        ChatPanel.setChat();
+                        ((Parent) SwingUtilities.getWindowAncestor(getComponent(1))).mostrarVentana("chat");
+                    }
+                }
+            }
+        });
+    }
+    
     private void logout(){
         Parent.user=null;
         ((Parent) SwingUtilities.getWindowAncestor(this)).mostrarVentana("login");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton add;
+    private javax.swing.JList<ChatDTO> chats;
+    private javax.swing.JButton iconBtn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton logoutBtn;
+    private javax.swing.JButton newChatBtn;
+    private javax.swing.JScrollPane scroll;
+    private javax.swing.JButton searchBtn;
+    private javax.swing.JButton selectBtn;
     // End of variables declaration//GEN-END:variables
 }

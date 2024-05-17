@@ -30,7 +30,13 @@ public class ControlUsuarios {
     
     public boolean registrarUsuario(UsuarioDTO usuario)throws NegocioException{
         try {
-            return dao.registrarUsuario(Convertidor.crearEntidadUsuario(usuario));
+            //si ya hay un usuario con ese telefono registrado
+            if(obtenerUsuario(usuario)!=null)return false;
+            //si no, se registra
+            if(Validador.validar(Validador.NOMBRE, usuario.getNombre())){
+                return dao.registrarUsuario(Convertidor.crearEntidadUsuario(usuario));
+            }
+            return false;
         } catch (PersistenciaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -45,6 +51,19 @@ public class ControlUsuarios {
                 UsuarioDTO dto= Convertidor.crearUsuarioDTO(u);
                 dto.setContrasena(usuario.getContrasena());
                 return dto;
+            }return null;
+        } catch (PersistenciaException e) {
+            throw new NegocioException(e.getMessage());
+        }
+    }
+    
+    public UsuarioDTO obtenerUsuario(UsuarioDTO usuario)throws NegocioException{
+        try {
+            EntidadUsuario u=new EntidadUsuario();
+            u.setTelefono(usuario.getTelefono());
+            u=dao.obtenerUsuario(u);
+            if(u!=null){
+                return Convertidor.crearUsuarioDTO(u);
             }return null;
         } catch (PersistenciaException e) {
             throw new NegocioException(e.getMessage());
